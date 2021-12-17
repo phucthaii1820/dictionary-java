@@ -22,6 +22,7 @@ public class Definition implements Serializable {
             this.data[i] = data[i];
     }
 
+
     public Definition() {
         this.data = null;
     }

@@ -1,7 +1,9 @@
 package vn.edu.hcmus._19127514.Dictionary_java;
 
 import java.io.*;
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 /**
@@ -12,13 +14,24 @@ import java.util.Map;
  */
 public class Dictionary implements Serializable {
     Map<String, Definition> Slang;
+    List<String> History;
 
-    public Dictionary(Map<String, Definition> slang) {
+    public Dictionary(Map<String, Definition> slang, List<String> history) {
         Slang = slang;
+        History = history;
     }
 
     public Dictionary() {
         Slang = new HashMap<>();
+        History = new ArrayList<>();
+    }
+
+    public Map<String, Definition> getSlang() {
+        return Slang;
+    }
+
+    public List<String> getHistory() {
+        return History;
     }
 
     public void addSlang (String k, String[] s) {
@@ -48,6 +61,7 @@ public class Dictionary implements Serializable {
     }
 
     public String[] search (String k) {
+        this.History.add(k);
         return Slang.get(k).getData();
     }
 
@@ -97,11 +111,15 @@ public class Dictionary implements Serializable {
 
     public void saveData(String path) throws IOException {
         try {
-            ObjectOutputStream objectOutputStream = new ObjectOutputStream(new FileOutputStream(path));
+            ObjectOutputStream objectOutputStream = new ObjectOutputStream(new FileOutputStream("b.dat"));
             objectOutputStream.writeObject(this);
             objectOutputStream.close();
         }catch (Exception e) {
             System.out.println(e.getMessage());
         }
+    }
+
+    public void addHistory(String a) {
+        this.History.add(a);
     }
 }
