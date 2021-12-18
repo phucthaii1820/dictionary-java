@@ -52,6 +52,19 @@ public class Dictionary implements Serializable {
         }
     }
 
+    public void overWrite(String k, String old, String current) {
+        Slang.get(k).overWriteDefinition(old, current);
+    }
+
+    public void editSlang(String kOld, String kCurrent, String[] value) {
+        try {
+            Slang.remove(kOld);
+            addSlang(kCurrent, value);
+        }catch (Exception ex) {
+            throw new NullPointerException(ex.getMessage());
+        }
+    }
+
     public void showDictionary () {
         for (Map.Entry<String, Definition> entry : Slang.entrySet()) {
             for(int i = 0; i < entry.getValue().getData().length; i++) {
@@ -62,14 +75,28 @@ public class Dictionary implements Serializable {
 
     public String[] search (String k) {
         this.History.add(k);
-        return Slang.get(k).getData();
+        String[] temp = null;
+        try {
+            temp = Slang.get(k).getData();
+        }
+        catch (Exception ex) {
+            throw new NullPointerException(ex.getMessage());
+        }
+        return temp;
     }
 
     public Dictionary searchByDefinition(String k) {
-        Dictionary temp = new Dictionary();
-        for (Map.Entry<String, Definition> entry : Slang.entrySet()) {
-            if(entry.getValue().isExitsInDefinition(k))
-                temp.addSlang(entry.getKey(), entry.getValue().getData());
+        this.History.add(k);
+        Dictionary temp = null;
+        try {
+            temp = new Dictionary();
+            for (Map.Entry<String, Definition> entry : Slang.entrySet()) {
+                if(entry.getValue().isExitsInDefinition(k))
+                    temp.addSlang(entry.getKey(), entry.getValue().getData());
+            }
+        }
+        catch (Exception ex) {
+            throw new NullPointerException(ex.getMessage());
         }
         return temp;
     }

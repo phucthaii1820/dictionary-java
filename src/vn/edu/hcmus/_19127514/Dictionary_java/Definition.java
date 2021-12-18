@@ -22,6 +22,12 @@ public class Definition implements Serializable {
             this.data[i] = data[i];
     }
 
+    public void overWriteDefinition(String old, String current) {
+        for(int i = 0; i < this.data.length; i++) {
+            if(this.data[i].equals(old))
+                this.data[i] = current;
+        }
+    }
 
     public Definition() {
         this.data = null;
