@@ -149,4 +149,30 @@ public class Dictionary implements Serializable {
     public void addHistory(String a) {
         this.History.add(a);
     }
+
+    public String randomKey() {
+        String key = "";
+        int random = (int)(Math.random() * (this.Slang.size()));
+        int index = 0;
+        for (Map.Entry<String, Definition> entry : Slang.entrySet()) {
+            if(index == random) {
+                key = entry.getKey();
+            }
+            index++;
+        }
+        return key;
+    }
+
+    public String randomValue() {
+        String value = "";
+        int random = (int)(Math.random() * (this.Slang.size()));
+        int index = 0;
+        for (Map.Entry<String, Definition> entry : Slang.entrySet()) {
+            if(index == random) {
+                value = entry.getValue().getData()[0];
+            }
+            index++;
+        }
+        return value;
+    }
 }

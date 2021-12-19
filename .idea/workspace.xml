@@ -6,7 +6,6 @@
   <component name="ChangeListManager">
     <list default="true" id="e121a3db-1c63-49b5-a017-b4d6c75d5d75" name="Changes" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/vn/edu/hcmus/_19127514/Dictionary_java/Definition.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/vn/edu/hcmus/_19127514/Dictionary_java/Definition.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/vn/edu/hcmus/_19127514/Dictionary_java/Dictionary.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/vn/edu/hcmus/_19127514/Dictionary_java/Dictionary.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/vn/edu/hcmus/_19127514/Dictionary_java/Main.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/vn/edu/hcmus/_19127514/Dictionary_java/Main.java" afterDir="false" />
     </list>
@@ -138,7 +137,9 @@
       <workItem from="1639663860726" duration="8219000" />
       <workItem from="1639746822065" duration="9100000" />
       <workItem from="1639800110607" duration="11282000" />
-      <workItem from="1639812487005" duration="1578000" />
+      <workItem from="1639812487005" duration="1976000" />
+      <workItem from="1639844146537" duration="192000" />
+      <workItem from="1639926652553" duration="8532000" />
     </task>
     <task id="LOCAL-00001" summary="create structure slang">
       <created>1639655497231</created>
@@ -161,7 +162,14 @@
       <option name="project" value="LOCAL" />
       <updated>1639757667096</updated>
     </task>
-    <option name="localTasksCounter" value="4" />
+    <task id="LOCAL-00004" summary="complete the requirement 1 to 7 but haven't check exception yet">
+      <created>1639814456523</created>
+      <option name="number" value="00004" />
+      <option name="presentableId" value="LOCAL-00004" />
+      <option name="project" value="LOCAL" />
+      <updated>1639814456523</updated>
+    </task>
+    <option name="localTasksCounter" value="5" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -172,6 +180,7 @@
     <MESSAGE value="create structure slang" />
     <MESSAGE value="add definition, saveData, connectData, search, searchByDefination" />
     <MESSAGE value="create home layout, search, search by definition" />
-    <option name="LAST_COMMIT_MESSAGE" value="create home layout, search, search by definition" />
+    <MESSAGE value="complete the requirement 1 to 7 but haven't check exception yet" />
+    <option name="LAST_COMMIT_MESSAGE" value="complete the requirement 1 to 7 but haven't check exception yet" />
   </component>
 </project>

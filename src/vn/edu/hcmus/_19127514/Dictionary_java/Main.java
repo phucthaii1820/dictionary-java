@@ -2,6 +2,7 @@ package vn.edu.hcmus._19127514.Dictionary_java;
 
 import javax.swing.*;
 import javax.swing.border.EmptyBorder;
+import javax.swing.table.DefaultTableModel;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -26,7 +27,7 @@ public class Main extends JPanel {
 
         JLabel label = new JLabel("Choice: ");
 
-        String []listChoice = {"1.Search by slang word.", "2. Search by definition.", "3. Show history.", "4. Add new slang word.", "5. Edit slang word.", "6. Delete slang word.", "7. Reset the dictionary to the original.", "8. Random 1 slang word", "9. ", "10. "};
+        String []listChoice = {"1.Search by slang word.", "2. Search by definition.", "3. Show history.", "4. Add new slang word.", "5. Edit slang word.", "6. Delete slang word.", "7. Reset the dictionary to the original.", "8. Random 1 slang word", "9. Random word quiz", "10. Random definition quiz"};
         JComboBox comboBox = new JComboBox(listChoice);
 
         JButton btnOk = new JButton("OK");
@@ -52,13 +53,22 @@ public class Main extends JPanel {
                         jPanelSearch.add(btnSearch);
 
                         JList list = new JList();
+                        DefaultTableModel defaultTableModel = new DefaultTableModel();
+                        defaultTableModel.addColumn("SST");
+                        defaultTableModel.addColumn("Mean");
+
+                        JTable table = new JTable(defaultTableModel);
+                        JScrollPane scrollPane = new JScrollPane(table);
 
                         btnSearch.addActionListener(new ActionListener() {
                             @Override
                             public void actionPerformed(ActionEvent e) {
                                 try {
                                     String[] resultSearch = dictionary.search(tfSearch.getText());
-                                    list.setListData(resultSearch);
+                                    //list.setListData(resultSearch);
+                                    for(int i = resultSearch.length - 1; i >= 0; i--) {
+                                        defaultTableModel.insertRow(0, new Object[] {i + 1, resultSearch[i]});
+                                    }
                                 }catch (Exception ex) {
                                     JFrame message = new JFrame("Message");
                                     JOptionPane.showMessageDialog(message, "Can't find that word in dictionary");
@@ -67,7 +77,8 @@ public class Main extends JPanel {
                         });
 
                         frame1.add(jPanelSearch, BorderLayout.PAGE_START);
-                        frame1.add(list, BorderLayout.CENTER);
+                        //frame1.add(list, BorderLayout.CENTER);
+                        frame1.add(scrollPane, BorderLayout.CENTER);
 
                         frame1.pack();
                         frame1.setVisible(true);
@@ -97,8 +108,14 @@ public class Main extends JPanel {
                         jPanelSearch.add(tfSearch);
                         jPanelSearch.add(btnSearch);
 
-                        JList list = new JList();
-                        JScrollPane s = new JScrollPane(list);
+                        //JList list = new JList();
+                        DefaultTableModel defaultTableModel = new DefaultTableModel();
+                        defaultTableModel.addColumn("STT");
+                        defaultTableModel.addColumn("Word");
+                        defaultTableModel.addColumn("Mean");
+
+                        JTable table = new JTable(defaultTableModel);
+                        JScrollPane scrollPane = new JScrollPane(table);
 
 
                         btnSearch.addActionListener(new ActionListener() {
@@ -107,14 +124,16 @@ public class Main extends JPanel {
                                 Dictionary resultSearch = dictionary.searchByDefinition(tfSearch.getText());
                                 Vector<String> stringSearch = new Vector<String>();
 
+                                int index = 1;
                                 if (resultSearch.getSlang().size() != 0) {
                                     for (Map.Entry<String, Definition> entry : resultSearch.getSlang().entrySet()) {
                                         for(int i = 0; i < entry.getValue().getData().length; i++) {
                                             stringSearch.add(String.format("%s: %s",entry.getKey(), entry.getValue().getData()[i]));
+                                            defaultTableModel.insertRow(index - 1, new Object[] {index ++,entry.getKey() , entry.getValue().getData()[i]});
                                         }
                                     }
 
-                                    list.setListData( stringSearch);
+                                    //list.setListData( stringSearch);
                                 }
                                 else {
                                     JFrame message = new JFrame("Message");
@@ -124,7 +143,7 @@ public class Main extends JPanel {
                         });
 
                         frame1.add(jPanelSearch, BorderLayout.PAGE_START);
-                        frame1.add(s, BorderLayout.CENTER);
+                        frame1.add(scrollPane, BorderLayout.CENTER);
 
                         frame1.pack();
                         frame1.setVisible(true);
@@ -147,19 +166,33 @@ public class Main extends JPanel {
                         frame1.setSize(500, 250);
 
                         //dictionary.addHistory("hello");
-                        String []column = {"Slang word"};
-                        Vector<String> vector = new Vector<String>(dictionary.getHistory());
-                        JList list;
-                        if(vector.size() != 0)
-                            list = new JList(vector);
-                        else {
-                            vector.add("You haven't searched yet");
-                            list = new JList(vector);
+//                        String []column = {"Slang word"};
+//                        Vector<String> vector = new Vector<String>(dictionary.getHistory());
+//                        JList list;
+//                        if(vector.size() != 0)
+//                            list = new JList(vector);
+//                        else {
+//                            vector.add("You haven't searched yet");
+//                            list = new JList(vector);
+//                        }
+//
+//                        JScrollPane s = new JScrollPane(list);
+
+                        List<String> history = dictionary.getHistory();
+
+                        DefaultTableModel defaultTableModel = new DefaultTableModel();
+                        defaultTableModel.addColumn("STT");
+                        defaultTableModel.addColumn("Word");
+
+                        JTable table = new JTable(defaultTableModel);
+                        JScrollPane scrollPane = new JScrollPane(table);
+
+                        if (history.size() != 0) {
+                            for(int i = 0; i < history.size(); i++)
+                                defaultTableModel.insertRow(i, new Object[] {i + 1, history.get(i)});
                         }
 
-                        JScrollPane s = new JScrollPane(list);
-
-                        frame1.add(s, BorderLayout.CENTER);
+                        frame1.add(scrollPane, BorderLayout.CENTER);
 
                         frame1.pack();
                         frame1.setVisible(true);
@@ -442,7 +475,7 @@ public class Main extends JPanel {
                         JPanel jPanelSearch = new JPanel();
                         jPanelSearch.setLayout(new FlowLayout());
                         JTextField tfSearch = new JTextField(20);
-                        JButton btnSearch = new JButton("Search");
+                        JButton btnSearch = new JButton("Delete");
 
                         jPanelSearch.add(tfSearch);
                         jPanelSearch.add(btnSearch);
@@ -504,6 +537,14 @@ public class Main extends JPanel {
                                     frameConfirm.pack();
                                     frameConfirm.setVisible(true);
                                     frameConfirm.setDefaultCloseOperation(frameConfirm.DISPOSE_ON_CLOSE);
+
+                                    frameConfirm.addWindowListener(new WindowAdapter() {
+                                        @Override
+                                        public void windowClosing(WindowEvent e) {
+                                            frameConfirm.dispose();
+                                            frame1.setVisible(true);
+                                        }
+                                    });
                                 }
                                 catch (Exception ex) {
                                     JFrame message = new JFrame("Message");
@@ -579,6 +620,356 @@ public class Main extends JPanel {
                         frameConfirm.setDefaultCloseOperation(frameConfirm.DISPOSE_ON_CLOSE);
 
                         frameConfirm.addWindowListener(new WindowAdapter() {
+                            @Override
+                            public void windowClosing(WindowEvent e) {
+                                frame.setVisible(true);
+                            }
+                        });
+
+                        break;
+                    }
+                    case 7: {
+                        JFrame frame1 = new JFrame("ON THIS DAY SLANG WORD");
+                        frame1.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
+                        frame1.setLayout(new GridLayout(3, 1));
+                        frame1.getRootPane().setBorder(new EmptyBorder(20, 20, 20, 20));
+                        frame1.setPreferredSize(new Dimension(400, 250));
+
+                        String newWord = dictionary.randomKey();
+
+                        JPanel top = new JPanel();
+                        top.setLayout(new FlowLayout());
+                        JLabel jLabelTitle = new JLabel("ON THIS DAY SLANG WORD");
+                        jLabelTitle.setFont(new Font("Calibri", Font.PLAIN, 20));
+                        top.add(jLabelTitle);
+
+                        JPanel center = new JPanel();
+                        center.setLayout(new FlowLayout());
+                        JLabel jLabelKey = new JLabel(newWord);
+                        jLabelKey.setForeground(Color.RED);
+
+                        JLabel labelTemp = new JLabel(" is mean ");
+
+                        JLabel jLabelValue = new JLabel(dictionary.search(newWord)[0]);
+                        jLabelValue.setForeground(Color.RED);
+                        center.add(jLabelKey);
+                        center.add(labelTemp);
+                        center.add(jLabelValue);
+
+                        JPanel end = new JPanel(new FlowLayout());
+
+                        Button btnNext = new Button("NEXT");
+                        btnNext.addActionListener(new ActionListener() {
+                            @Override
+                            public void actionPerformed(ActionEvent e) {
+                                String newWordTemp = dictionary.randomKey();
+                                jLabelKey.setText(newWordTemp);
+                                jLabelValue.setText(dictionary.search(newWordTemp)[0]);
+                            }
+                        });
+
+                        end.add(btnNext);
+
+
+                        frame1.add(top);
+                        frame1.add(center);
+                        frame1.add(end);
+
+                        frame1.pack();
+                        frame1.setVisible(true);
+                        frame1.setDefaultCloseOperation(frame1.DISPOSE_ON_CLOSE);
+
+                        frame1.addWindowListener(new WindowAdapter() {
+                            @Override
+                            public void windowClosing(WindowEvent e) {
+                                frame.setVisible(true);
+                            }
+                        });
+
+                        break;
+                    }
+                    case 8: {
+                        JFrame frame1 = new JFrame("RANDOM WORD QUIZ");
+                        frame1.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
+                        frame1.setLayout(new GridLayout(2, 1));
+                        frame1.getRootPane().setBorder(new EmptyBorder(20, 20, 20, 20));
+                        frame1.setPreferredSize(new Dimension(500, 200));
+
+                        String newWord = dictionary.randomKey();
+                        String result = dictionary.Slang.get(newWord).getData()[0];
+
+                        List<String> temp = new ArrayList<String>();
+                        temp.add(result);
+                        temp.add(dictionary.randomValue());
+                        temp.add(dictionary.randomValue());
+                        temp.add(dictionary.randomValue());
+
+                        for(int i = 0; i < 3; i++) {
+                            int random = (int)(Math.random() * 4);
+                            String a = temp.get(i);
+                            temp.set(i, temp.get(random));
+                            temp.set(random, a);
+                        }
+
+                        JPanel top = new JPanel();
+                        top.setLayout(new FlowLayout());
+                        JLabel jLabelTitle = new JLabel(newWord);
+                        jLabelTitle.setFont(new Font("Calibri", Font.PLAIN, 20));
+                        top.add(jLabelTitle);
+
+                        JPanel center = new JPanel();
+                        center.setLayout(new GridLayout(2, 2));
+                        Button btn1 = new Button(temp.get(0));
+                        Button btn2 = new Button(temp.get(1));
+                        Button btn3 = new Button(temp.get(2));
+                        Button btn4 = new Button(temp.get(3));
+
+                        btn1.addActionListener(new ActionListener() {
+                            @Override
+                            public void actionPerformed(ActionEvent e) {
+                                if(result.equals(btn1.getLabel())) {
+                                    btn1.setForeground(Color.GREEN);
+                                    JFrame message = new JFrame("Message");
+                                    JOptionPane.showMessageDialog(message, "correct, good job!");
+                                    frame1.dispose();
+                                    frame.setVisible(true);
+                                }
+                                else {
+                                    btn1.setForeground(Color.RED);
+                                    JFrame message = new JFrame("Message");
+                                    JOptionPane.showMessageDialog(message, "uncorrect, try again!");
+                                }
+                            }
+                        });
+
+                        btn2.addActionListener(new ActionListener() {
+                            @Override
+                            public void actionPerformed(ActionEvent e) {
+                                if(result.equals(btn2.getLabel())) {
+                                    btn2.setForeground(Color.GREEN);
+                                    JFrame message = new JFrame("Message");
+                                    JOptionPane.showMessageDialog(message, "correct, good job!");
+                                    frame1.dispose();
+                                    frame.setVisible(true);
+                                }
+                                else {
+                                    btn2.setForeground(Color.RED);
+                                    JFrame message = new JFrame("Message");
+                                    JOptionPane.showMessageDialog(message, "uncorrect, try again!");
+                                }
+                            }
+                        });
+
+                        btn3.addActionListener(new ActionListener() {
+                            @Override
+                            public void actionPerformed(ActionEvent e) {
+                                if(result.equals(btn3.getLabel())) {
+                                    btn3.setForeground(Color.GREEN);
+                                    JFrame message = new JFrame("Message");
+                                    JOptionPane.showMessageDialog(message, "correct, good job!");
+                                    frame1.dispose();
+                                    frame.setVisible(true);
+                                }
+                                else {
+                                    btn3.setForeground(Color.RED);
+                                    JFrame message = new JFrame("Message");
+                                    JOptionPane.showMessageDialog(message, "uncorrect, try again!");
+                                }
+                            }
+                        });
+
+                        btn4.addActionListener(new ActionListener() {
+                            @Override
+                            public void actionPerformed(ActionEvent e) {
+                                if(result.equals(btn4.getLabel())) {
+                                    btn4.setForeground(Color.GREEN);
+                                    JFrame message = new JFrame("Message");
+                                    JOptionPane.showMessageDialog(message, "correct, good job!");
+                                    frame1.dispose();
+                                    frame.setVisible(true);
+
+
+                                }
+                                else {
+                                    btn4.setForeground(Color.RED);
+                                    JFrame message = new JFrame("Message");
+                                    JOptionPane.showMessageDialog(message, "uncorrect, try again!");
+                                }
+                            }
+                        });
+
+                        center.add(btn1);
+                        center.add(btn2);
+                        center.add(btn3);
+                        center.add(btn4);
+
+//                        JPanel end = new JPanel(new FlowLayout());
+//
+//                        Button btnNext = new Button("NEXT");
+//                        btnNext.addActionListener(new ActionListener() {
+//                            @Override
+//                            public void actionPerformed(ActionEvent e) {
+//                                String newWordTemp = dictionary.randomKey();
+//                            }
+//                        });
+
+                        //end.add(btnNext);
+
+
+                        frame1.add(top);
+                        frame1.add(center);
+                        //frame1.add(end);
+
+                        frame1.pack();
+                        frame1.setVisible(true);
+                        frame1.setDefaultCloseOperation(frame1.DISPOSE_ON_CLOSE);
+
+                        frame1.addWindowListener(new WindowAdapter() {
+                            @Override
+                            public void windowClosing(WindowEvent e) {
+                                frame.setVisible(true);
+                            }
+                        });
+
+                        break;
+                    }
+                    case 9: {
+                        JFrame frame1 = new JFrame("RANDOM DEFINITION QUIZ");
+                        frame1.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
+                        frame1.setLayout(new GridLayout(2, 1));
+                        frame1.getRootPane().setBorder(new EmptyBorder(20, 20, 20, 20));
+                        frame1.setPreferredSize(new Dimension(500, 200));
+
+                        String newWord = dictionary.randomKey();
+                        String result = dictionary.Slang.get(newWord).getData()[0];
+
+                        List<String> temp = new ArrayList<String>();
+                        temp.add(newWord);
+                        temp.add(dictionary.randomKey());
+                        temp.add(dictionary.randomKey());
+                        temp.add(dictionary.randomKey());
+
+                        for(int i = 0; i < 3; i++) {
+                            int random = (int)(Math.random() * 4);
+                            String a = temp.get(i);
+                            temp.set(i, temp.get(random));
+                            temp.set(random, a);
+                        }
+
+                        JPanel top = new JPanel();
+                        top.setLayout(new FlowLayout());
+                        JLabel jLabelTitle = new JLabel(result);
+                        jLabelTitle.setFont(new Font("Calibri", Font.PLAIN, 20));
+                        top.add(jLabelTitle);
+
+                        JPanel center = new JPanel();
+                        center.setLayout(new GridLayout(2, 2));
+                        Button btn1 = new Button(temp.get(0));
+                        Button btn2 = new Button(temp.get(1));
+                        Button btn3 = new Button(temp.get(2));
+                        Button btn4 = new Button(temp.get(3));
+
+                        btn1.addActionListener(new ActionListener() {
+                            @Override
+                            public void actionPerformed(ActionEvent e) {
+                                if(newWord.equals(btn1.getLabel())) {
+                                    btn1.setForeground(Color.GREEN);
+                                    JFrame message = new JFrame("Message");
+                                    JOptionPane.showMessageDialog(message, "correct, good job!");
+                                    frame1.dispose();
+                                    frame.setVisible(true);
+                                }
+                                else {
+                                    btn1.setForeground(Color.RED);
+                                    JFrame message = new JFrame("Message");
+                                    JOptionPane.showMessageDialog(message, "uncorrect, try again!");
+                                }
+                            }
+                        });
+
+                        btn2.addActionListener(new ActionListener() {
+                            @Override
+                            public void actionPerformed(ActionEvent e) {
+                                if(newWord.equals(btn2.getLabel())) {
+                                    btn2.setForeground(Color.GREEN);
+                                    JFrame message = new JFrame("Message");
+                                    JOptionPane.showMessageDialog(message, "correct, good job!");
+                                    frame1.dispose();
+                                    frame.setVisible(true);
+                                }
+                                else {
+                                    btn2.setForeground(Color.RED);
+                                    JFrame message = new JFrame("Message");
+                                    JOptionPane.showMessageDialog(message, "uncorrect, try again!");
+                                }
+                            }
+                        });
+
+                        btn3.addActionListener(new ActionListener() {
+                            @Override
+                            public void actionPerformed(ActionEvent e) {
+                                if(newWord.equals(btn3.getLabel())) {
+                                    btn3.setForeground(Color.GREEN);
+                                    JFrame message = new JFrame("Message");
+                                    JOptionPane.showMessageDialog(message, "correct, good job!");
+                                    frame1.dispose();
+                                    frame.setVisible(true);
+                                }
+                                else {
+                                    btn3.setForeground(Color.RED);
+                                    JFrame message = new JFrame("Message");
+                                    JOptionPane.showMessageDialog(message, "uncorrect, try again!");
+                                }
+                            }
+                        });
+
+                        btn4.addActionListener(new ActionListener() {
+                            @Override
+                            public void actionPerformed(ActionEvent e) {
+                                if(newWord.equals(btn4.getLabel())) {
+                                    btn4.setForeground(Color.GREEN);
+                                    JFrame message = new JFrame("Message");
+                                    JOptionPane.showMessageDialog(message, "correct, good job!");
+                                    frame1.dispose();
+                                    frame.setVisible(true);
+
+
+                                }
+                                else {
+                                    btn4.setForeground(Color.RED);
+                                    JFrame message = new JFrame("Message");
+                                    JOptionPane.showMessageDialog(message, "uncorrect, try again!");
+                                }
+                            }
+                        });
+
+                        center.add(btn1);
+                        center.add(btn2);
+                        center.add(btn3);
+                        center.add(btn4);
+
+//                        JPanel end = new JPanel(new FlowLayout());
+//
+//                        Button btnNext = new Button("NEXT");
+//                        btnNext.addActionListener(new ActionListener() {
+//                            @Override
+//                            public void actionPerformed(ActionEvent e) {
+//                                String newWordTemp = dictionary.randomKey();
+//                            }
+//                        });
+
+                        //end.add(btnNext);
+
+
+                        frame1.add(top);
+                        frame1.add(center);
+                        //frame1.add(end);
+
+                        frame1.pack();
+                        frame1.setVisible(true);
+                        frame1.setDefaultCloseOperation(frame1.DISPOSE_ON_CLOSE);
+
+                        frame1.addWindowListener(new WindowAdapter() {
                             @Override
                             public void windowClosing(WindowEvent e) {
                                 frame.setVisible(true);
