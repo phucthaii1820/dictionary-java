@@ -74,7 +74,6 @@ public class Dictionary implements Serializable {
     }
 
     public String[] search (String k) {
-        this.History.add(k);
         String[] temp = null;
         try {
             temp = Slang.get(k).getData();
@@ -86,7 +85,6 @@ public class Dictionary implements Serializable {
     }
 
     public Dictionary searchByDefinition(String k) {
-        this.History.add(k);
         Dictionary temp = null;
         try {
             temp = new Dictionary();
@@ -110,7 +108,7 @@ public class Dictionary implements Serializable {
             while (line != null) {
                 String []arrString = line.split("`");
                 if(arrString.length == 2)
-                    data.addSlang(arrString[0], arrString[1]);
+                    data.addSlang(arrString[0], arrString[1].replace("| ", "`").split("`"));
                 else {
                     data.addSlang(arrString[0], "");
                 }
@@ -127,7 +125,7 @@ public class Dictionary implements Serializable {
     public static Dictionary connectData(String path) {
         Dictionary data = null;
         try {
-            ObjectInputStream objectInputStream = new ObjectInputStream(new FileInputStream("b.dat"));
+            ObjectInputStream objectInputStream = new ObjectInputStream(new FileInputStream(path));
             data = (Dictionary) objectInputStream.readObject();
         }catch (Exception e) {
             System.out.println(e.getMessage());
@@ -138,7 +136,7 @@ public class Dictionary implements Serializable {
 
     public void saveData(String path) throws IOException {
         try {
-            ObjectOutputStream objectOutputStream = new ObjectOutputStream(new FileOutputStream("b.dat"));
+            ObjectOutputStream objectOutputStream = new ObjectOutputStream(new FileOutputStream(path));
             objectOutputStream.writeObject(this);
             objectOutputStream.close();
         }catch (Exception e) {

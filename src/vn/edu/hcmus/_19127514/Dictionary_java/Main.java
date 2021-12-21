@@ -17,8 +17,8 @@ import java.util.List;
 public class Main extends JPanel {
     Dictionary dictionary;
     public Main(JFrame frame) throws IOException {
-        dictionary = Dictionary.importData("slang.txt");
-
+        dictionary = Dictionary.connectData("data.dat");
+        //dictionary = Dictionary.importData("slang.txt");
         setLayout(new BorderLayout());
         setBorder(new EmptyBorder(8,8,8,8));
 
@@ -64,7 +64,13 @@ public class Main extends JPanel {
                             @Override
                             public void actionPerformed(ActionEvent e) {
                                 try {
+                                    if(defaultTableModel.getRowCount() > 0) {
+                                        for(int i = defaultTableModel.getRowCount() - 1; i >= 0; i--)
+                                            defaultTableModel.removeRow(i);
+                                    }
+
                                     String[] resultSearch = dictionary.search(tfSearch.getText());
+                                    dictionary.addHistory(tfSearch.getText());
                                     //list.setListData(resultSearch);
                                     for(int i = resultSearch.length - 1; i >= 0; i--) {
                                         defaultTableModel.insertRow(0, new Object[] {i + 1, resultSearch[i]});
@@ -121,23 +127,36 @@ public class Main extends JPanel {
                         btnSearch.addActionListener(new ActionListener() {
                             @Override
                             public void actionPerformed(ActionEvent e) {
-                                Dictionary resultSearch = dictionary.searchByDefinition(tfSearch.getText());
-                                Vector<String> stringSearch = new Vector<String>();
-
-                                int index = 1;
-                                if (resultSearch.getSlang().size() != 0) {
-                                    for (Map.Entry<String, Definition> entry : resultSearch.getSlang().entrySet()) {
-                                        for(int i = 0; i < entry.getValue().getData().length; i++) {
-                                            stringSearch.add(String.format("%s: %s",entry.getKey(), entry.getValue().getData()[i]));
-                                            defaultTableModel.insertRow(index - 1, new Object[] {index ++,entry.getKey() , entry.getValue().getData()[i]});
-                                        }
-                                    }
-
-                                    //list.setListData( stringSearch);
+                                if(tfSearch.getText().equals("")) {
+                                    JFrame message = new JFrame("Message");
+                                    JOptionPane.showMessageDialog(message, "You can not leave it blank");
                                 }
                                 else {
-                                    JFrame message = new JFrame("Message");
-                                    JOptionPane.showMessageDialog(message, "Couldn't find a word with such a definition");
+                                    dictionary.addHistory(tfSearch.getText());
+
+                                    if(defaultTableModel.getRowCount() > 0) {
+                                        for(int i = defaultTableModel.getRowCount() - 1; i >= 0; i--)
+                                            defaultTableModel.removeRow(i);
+                                    }
+
+                                    Dictionary resultSearch = dictionary.searchByDefinition(tfSearch.getText());
+                                    Vector<String> stringSearch = new Vector<String>();
+
+                                    int index = 1;
+                                    if (resultSearch.getSlang().size() != 0) {
+                                        for (Map.Entry<String, Definition> entry : resultSearch.getSlang().entrySet()) {
+                                            for(int i = 0; i < entry.getValue().getData().length; i++) {
+                                                stringSearch.add(String.format("%s: %s",entry.getKey(), entry.getValue().getData()[i]));
+                                                defaultTableModel.insertRow(index - 1, new Object[] {index ++,entry.getKey() , entry.getValue().getData()[i]});
+                                            }
+                                        }
+
+                                        //list.setListData( stringSearch);
+                                    }
+                                    else {
+                                        JFrame message = new JFrame("Message");
+                                        JOptionPane.showMessageDialog(message, "Couldn't find a word with such a definition");
+                                    }
                                 }
                             }
                         });
@@ -244,86 +263,92 @@ public class Main extends JPanel {
                             public void actionPerformed(ActionEvent e) {
                                 frame1.setVisible(false);
                                 try{
-                                    if (dictionary.getSlang().containsKey(tfWord.getText())) {
-                                        JFrame frameWord = new JFrame();
-                                        frameWord.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
-                                        frameWord.getRootPane().setBorder(new EmptyBorder(20, 20, 20, 20));
-                                        frameWord.setLayout(new GridLayout(2, 1));
-
-                                        JPanel jPanelOverWrite = new JPanel();
-                                        jPanelOverWrite.setLayout(new FlowLayout());
-
-                                        JLabel lbOverWrite = new JLabel("Over Write");
-                                        JComboBox comboBoxOverWrite = new JComboBox();
-                                        String []overWrite = dictionary.search(tfWord.getText());
-                                        for(int i = 0; i < overWrite.length; i++)
-                                            comboBoxOverWrite.addItem(overWrite[i]);
-
-                                        JButton btnOk = new JButton("OK");
-
-                                        btnOk.addActionListener(new ActionListener() {
-                                            @Override
-                                            public void actionPerformed(ActionEvent e) {
-                                                try {
-                                                    dictionary.overWrite(tfWord.getText(), overWrite[comboBoxOverWrite.getSelectedIndex()], taDefiniton.getText());
-                                                    JFrame message = new JFrame("Message");
-                                                    JOptionPane.showMessageDialog(message, "Over write success!!");
-                                                    frameWord.dispose();
-                                                    frame1.dispose();
-                                                    frame.setVisible(true);
-                                                }catch (Exception ex) {
-                                                    System.out.println(ex);
-                                                }
-                                            }
-                                        });
-
-                                        jPanelOverWrite.add(lbOverWrite);
-                                        jPanelOverWrite.add(comboBoxOverWrite);
-                                        jPanelOverWrite.add(btnOk);
-
-
-                                        JPanel bottomOverWrite = new JPanel();
-                                        bottomOverWrite.setLayout(new FlowLayout());
-
-                                        JButton btnDuplicate = new JButton("Duplicate");
-                                        bottomOverWrite.add(btnDuplicate);
-
-                                        btnDuplicate.addActionListener(new ActionListener() {
-                                            @Override
-                                            public void actionPerformed(ActionEvent e) {
-                                                try{
-                                                    dictionary.addSlang(tfWord.getText(), taDefiniton.getText());
-                                                    JFrame message = new JFrame("Message");
-                                                    JOptionPane.showMessageDialog(message, "Duplicate success!!");
-                                                    frameWord.dispose();
-                                                    frame1.dispose();
-                                                    frame.setVisible(true);
-                                                }catch (Exception ex) {
-                                                    System.out.println(ex);
-                                                }
-                                            }
-                                        });
-
-                                        frameWord.add(jPanelOverWrite);
-                                        frameWord.add(bottomOverWrite);
-
-                                        frameWord.pack();
-                                        frameWord.setVisible(true);
-                                        frameWord.setDefaultCloseOperation(frameWord.DISPOSE_ON_CLOSE);
-
-                                        frameWord.addWindowListener(new WindowAdapter() {
-                                            @Override
-                                            public void windowClosing(WindowEvent e) {
-                                                frame1.setVisible(true);
-                                            }
-                                        });
-
-                                    }
-                                    else {
-                                        dictionary.addSlang(tfWord.getText(), taDefiniton.getText());
+                                    if(tfWord.getText().equals("") || taDefiniton.getText().equals("")) {
                                         JFrame message = new JFrame("Message");
-                                        JOptionPane.showMessageDialog(message, "Add success!!");
-                                        frame.setVisible(true);
+                                        JOptionPane.showMessageDialog(message, "You can not leave it blank");
+                                        frame1.setVisible(true);
+                                    } else {
+                                        if (dictionary.getSlang().containsKey(tfWord.getText())) {
+                                            JFrame frameWord = new JFrame();
+                                            frameWord.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
+                                            frameWord.getRootPane().setBorder(new EmptyBorder(20, 20, 20, 20));
+                                            frameWord.setLayout(new GridLayout(2, 1));
+
+                                            JPanel jPanelOverWrite = new JPanel();
+                                            jPanelOverWrite.setLayout(new FlowLayout());
+
+                                            JLabel lbOverWrite = new JLabel("Over Write");
+                                            JComboBox comboBoxOverWrite = new JComboBox();
+                                            String []overWrite = dictionary.search(tfWord.getText());
+                                            for(int i = 0; i < overWrite.length; i++)
+                                                comboBoxOverWrite.addItem(overWrite[i]);
+
+                                            JButton btnOk = new JButton("OK");
+
+                                            btnOk.addActionListener(new ActionListener() {
+                                                @Override
+                                                public void actionPerformed(ActionEvent e) {
+                                                    try {
+                                                        dictionary.overWrite(tfWord.getText(), overWrite[comboBoxOverWrite.getSelectedIndex()], taDefiniton.getText());
+                                                        JFrame message = new JFrame("Message");
+                                                        JOptionPane.showMessageDialog(message, "Over write success!!");
+                                                        frameWord.dispose();
+                                                        frame1.dispose();
+                                                        frame.setVisible(true);
+                                                    }catch (Exception ex) {
+                                                        System.out.println(ex);
+                                                    }
+                                                }
+                                            });
+
+                                            jPanelOverWrite.add(lbOverWrite);
+                                            jPanelOverWrite.add(comboBoxOverWrite);
+                                            jPanelOverWrite.add(btnOk);
+
+
+                                            JPanel bottomOverWrite = new JPanel();
+                                            bottomOverWrite.setLayout(new FlowLayout());
+
+                                            JButton btnDuplicate = new JButton("Duplicate");
+                                            bottomOverWrite.add(btnDuplicate);
+
+                                            btnDuplicate.addActionListener(new ActionListener() {
+                                                @Override
+                                                public void actionPerformed(ActionEvent e) {
+                                                    try{
+                                                        dictionary.addSlang(tfWord.getText(), taDefiniton.getText());
+                                                        JFrame message = new JFrame("Message");
+                                                        JOptionPane.showMessageDialog(message, "Duplicate success!!");
+                                                        frameWord.dispose();
+                                                        frame1.dispose();
+                                                        frame.setVisible(true);
+                                                    }catch (Exception ex) {
+                                                        System.out.println(ex);
+                                                    }
+                                                }
+                                            });
+
+                                            frameWord.add(jPanelOverWrite);
+                                            frameWord.add(bottomOverWrite);
+
+                                            frameWord.pack();
+                                            frameWord.setVisible(true);
+                                            frameWord.setDefaultCloseOperation(frameWord.DISPOSE_ON_CLOSE);
+
+                                            frameWord.addWindowListener(new WindowAdapter() {
+                                                @Override
+                                                public void windowClosing(WindowEvent e) {
+                                                    frame1.setVisible(true);
+                                                }
+                                            });
+
+                                        }
+                                        else {
+                                            dictionary.addSlang(tfWord.getText(), taDefiniton.getText());
+                                            JFrame message = new JFrame("Message");
+                                            JOptionPane.showMessageDialog(message, "Add success!!");
+                                            frame.setVisible(true);
+                                        }
                                     }
                                 }catch (Exception ex) {
                                 }
@@ -411,14 +436,20 @@ public class Main extends JPanel {
                                         @Override
                                         public void actionPerformed(ActionEvent e) {
                                             try{
-                                                String []tempResult = taDefiniton.getText().split("\n");
-                                                dictionary.editSlang(wordOld, tfWord.getText(),tempResult);
+                                                if(tfWord.getText().equals("") || taDefiniton.getText().equals("")) {
+                                                    JFrame message = new JFrame("Message");
+                                                    JOptionPane.showMessageDialog(message, "You can not leave it blank");
+                                                }
+                                                else {
+                                                    String []tempResult = taDefiniton.getText().split("\n");
+                                                    dictionary.editSlang(wordOld, tfWord.getText(),tempResult);
 
-                                                JFrame message = new JFrame("Message");
-                                                JOptionPane.showMessageDialog(message, "Edit success!!");
-                                                frameEdit.dispose();
-                                                frame1.dispose();
-                                                frame.setVisible(true);
+                                                    JFrame message = new JFrame("Message");
+                                                    JOptionPane.showMessageDialog(message, "Edit success!!");
+                                                    frameEdit.dispose();
+                                                    frame1.dispose();
+                                                    frame.setVisible(true);
+                                                }
                                             }catch (Exception ex){
                                                 JFrame message = new JFrame("Message");
                                                 JOptionPane.showMessageDialog(message, "Edit fail!!");
@@ -484,6 +515,12 @@ public class Main extends JPanel {
                             @Override
                             public void actionPerformed(ActionEvent e) {
                                 try{
+                                    if(tfSearch.getText().equals("")) {
+
+                                    }
+                                    else {
+
+                                    }
                                     frame1.setVisible(false);
                                     String[] temmp = dictionary.search(tfSearch.getText());
 
@@ -987,6 +1024,17 @@ public class Main extends JPanel {
         toppanel.add(btnOk);
 
         add(toppanel, BorderLayout.CENTER);
+
+        frame.addWindowListener(new WindowAdapter() {
+            @Override
+            public void windowClosing(WindowEvent e) {
+                try {
+                    dictionary.saveData("data.dat");
+                } catch (IOException ex) {
+                    ex.printStackTrace();
+                }
+            }
+        });
     }
 
     private static void createAndShowGUI() throws IOException {
