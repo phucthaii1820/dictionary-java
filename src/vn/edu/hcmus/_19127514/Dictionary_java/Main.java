@@ -80,9 +80,8 @@ public class Main extends JPanel {
                                         int index = 1;
                                         if (resultSearch.getSlang().size() != 0) {
                                             for (Map.Entry<String, Definition> entry : resultSearch.getSlang().entrySet()) {
-                                                for(int i = 0; i < entry.getValue().getData().length; i++) {
+                                                for(int i = 0; i < entry.getValue().getData().length; i++)
                                                     defaultTableModel.insertRow(index - 1, new Object[] {index ++,entry.getKey() , entry.getValue().getData()[i]});
-                                                }
                                             }
                                         }
                                         else {
@@ -159,9 +158,8 @@ public class Main extends JPanel {
                                     int index = 1;
                                     if (resultSearch.getSlang().size() != 0) {
                                         for (Map.Entry<String, Definition> entry : resultSearch.getSlang().entrySet()) {
-                                            for(int i = 0; i < entry.getValue().getData().length; i++) {
+                                            for(int i = 0; i < entry.getValue().getData().length; i++)
                                                 defaultTableModel.insertRow(index - 1, new Object[]{index++, entry.getKey(), entry.getValue().getData()[i]});
-                                            }
                                         }
 
                                     }

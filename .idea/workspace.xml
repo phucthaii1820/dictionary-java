@@ -9,13 +9,7 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="e121a3db-1c63-49b5-a017-b4d6c75d5d75" name="Changes" comment="">
-      <change afterPath="$PROJECT_DIR$/dictionary-java.jar" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/data.dat" beforeDir="false" afterPath="$PROJECT_DIR$/data.dat" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/vn/edu/hcmus/_19127514/Dictionary_java/Dictionary.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/vn/edu/hcmus/_19127514/Dictionary_java/Dictionary.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/vn/edu/hcmus/_19127514/Dictionary_java/Main.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/vn/edu/hcmus/_19127514/Dictionary_java/Main.java" afterDir="false" />
-    </list>
+    <list default="true" id="e121a3db-1c63-49b5-a017-b4d6c75d5d75" name="Changes" comment="" />
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
@@ -167,6 +161,7 @@
       <workItem from="1640596351681" duration="923000" />
       <workItem from="1640605974630" duration="15000" />
       <workItem from="1641257450756" duration="1996000" />
+      <workItem from="1641259889659" duration="576000" />
     </task>
     <task id="LOCAL-00001" summary="create structure slang">
       <created>1639655497231</created>
@@ -210,7 +205,14 @@
       <option name="project" value="LOCAL" />
       <updated>1640103858112</updated>
     </task>
-    <option name="localTasksCounter" value="7" />
+    <task id="LOCAL-00007" summary="final 100%">
+      <created>1641259937564</created>
+      <option name="number" value="00007" />
+      <option name="presentableId" value="LOCAL-00007" />
+      <option name="project" value="LOCAL" />
+      <updated>1641259937564</updated>
+    </task>
+    <option name="localTasksCounter" value="8" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -224,6 +226,7 @@
     <MESSAGE value="complete the requirement 1 to 7 but haven't check exception yet" />
     <MESSAGE value="complete require 1 to 10 (90%) but haven't check exception yet" />
     <MESSAGE value="final 98%" />
-    <option name="LAST_COMMIT_MESSAGE" value="final 98%" />
+    <MESSAGE value="final 100%" />
+    <option name="LAST_COMMIT_MESSAGE" value="final 100%" />
   </component>
 </project>
