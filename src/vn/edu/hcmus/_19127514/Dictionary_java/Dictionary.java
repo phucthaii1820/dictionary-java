@@ -84,6 +84,21 @@ public class Dictionary implements Serializable {
         return temp;
     }
 
+    public Dictionary searchBySlang(String k) {
+        Dictionary temp = null;
+        try {
+            temp = new Dictionary();
+            for (Map.Entry<String, Definition> entry : Slang.entrySet()) {
+                if(entry.getKey().toUpperCase().contains(k.toUpperCase()))
+                    temp.addSlang(entry.getKey(), entry.getValue().getData());
+            }
+        }
+        catch (Exception ex) {
+            throw new NullPointerException(ex.getMessage());
+        }
+        return temp;
+    }
+
     public Dictionary searchByDefinition(String k) {
         Dictionary temp = null;
         try {
@@ -127,6 +142,7 @@ public class Dictionary implements Serializable {
         try {
             ObjectInputStream objectInputStream = new ObjectInputStream(new FileInputStream(path));
             data = (Dictionary) objectInputStream.readObject();
+            objectInputStream.close();
         }catch (Exception e) {
             System.out.println(e.getMessage());
         }

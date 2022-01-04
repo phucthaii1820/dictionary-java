@@ -55,6 +55,7 @@ public class Main extends JPanel {
                         JList list = new JList();
                         DefaultTableModel defaultTableModel = new DefaultTableModel();
                         defaultTableModel.addColumn("SST");
+                        defaultTableModel.addColumn("Word");
                         defaultTableModel.addColumn("Mean");
 
                         JTable table = new JTable(defaultTableModel);
@@ -64,16 +65,30 @@ public class Main extends JPanel {
                             @Override
                             public void actionPerformed(ActionEvent e) {
                                 try {
-                                    if(defaultTableModel.getRowCount() > 0) {
-                                        for(int i = defaultTableModel.getRowCount() - 1; i >= 0; i--)
-                                            defaultTableModel.removeRow(i);
+                                    if(tfSearch.getText().equals("")) {
+                                        JFrame message = new JFrame("Message");
+                                        JOptionPane.showMessageDialog(message, "You can not leave it blank");
                                     }
+                                    else {
+                                        if(defaultTableModel.getRowCount() > 0) {
+                                            for(int i = defaultTableModel.getRowCount() - 1; i >= 0; i--)
+                                                defaultTableModel.removeRow(i);
+                                        }
+                                        dictionary.addHistory(tfSearch.getText());
+                                        Dictionary resultSearch = dictionary.searchBySlang(tfSearch.getText());
 
-                                    String[] resultSearch = dictionary.search(tfSearch.getText());
-                                    dictionary.addHistory(tfSearch.getText());
-                                    //list.setListData(resultSearch);
-                                    for(int i = resultSearch.length - 1; i >= 0; i--) {
-                                        defaultTableModel.insertRow(0, new Object[] {i + 1, resultSearch[i]});
+                                        int index = 1;
+                                        if (resultSearch.getSlang().size() != 0) {
+                                            for (Map.Entry<String, Definition> entry : resultSearch.getSlang().entrySet()) {
+                                                for(int i = 0; i < entry.getValue().getData().length; i++) {
+                                                    defaultTableModel.insertRow(index - 1, new Object[] {index ++,entry.getKey() , entry.getValue().getData()[i]});
+                                                }
+                                            }
+                                        }
+                                        else {
+                                            JFrame message = new JFrame("Message");
+                                            JOptionPane.showMessageDialog(message, "Couldn't find a word with such a definition");
+                                        }
                                     }
                                 }catch (Exception ex) {
                                     JFrame message = new JFrame("Message");
@@ -140,18 +155,15 @@ public class Main extends JPanel {
                                     }
 
                                     Dictionary resultSearch = dictionary.searchByDefinition(tfSearch.getText());
-                                    Vector<String> stringSearch = new Vector<String>();
 
                                     int index = 1;
                                     if (resultSearch.getSlang().size() != 0) {
                                         for (Map.Entry<String, Definition> entry : resultSearch.getSlang().entrySet()) {
                                             for(int i = 0; i < entry.getValue().getData().length; i++) {
-                                                stringSearch.add(String.format("%s: %s",entry.getKey(), entry.getValue().getData()[i]));
-                                                defaultTableModel.insertRow(index - 1, new Object[] {index ++,entry.getKey() , entry.getValue().getData()[i]});
+                                                defaultTableModel.insertRow(index - 1, new Object[]{index++, entry.getKey(), entry.getValue().getData()[i]});
                                             }
                                         }
 
-                                        //list.setListData( stringSearch);
                                     }
                                     else {
                                         JFrame message = new JFrame("Message");
